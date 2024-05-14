@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pundi.mapper.UserAddressMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.pundi.entity.UserAddressEntity">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="wallet_name" property="walletName" />
+        <result column="network_id" property="networkId" />
+        <result column="asset" property="asset" />
+        <result column="address" property="address" />
+        <result column="private_key" property="privateKey" />
+        <result column="tag" property="tag" />
+        <result column="state" property="state" />
+        <result column="note" property="note" />
+        <result column="version" property="version" />
+        <result column="deleted" property="deleted" />
+        <result column="deleted_at" property="deletedAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="created_at" property="createdAt" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uid, wallet_name, network_id, asset, address, private_key, tag, state, note, version, deleted, deleted_at, updated_at, created_at
+    </sql>
+
+</mapper>
