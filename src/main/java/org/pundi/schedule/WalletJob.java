@@ -1,10 +1,14 @@
 package org.pundi.schedule;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.pundi.constant.WalletTypeEnum;
 import org.pundi.service.TransferService;
 import org.pundi.service.UserTransactionsService;
+import org.pundi.strategy.WalletStrategy;
+import org.pundi.vo.CreateAddressVO;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 public class WalletJob {
 
   private final TransferService transferService;
+
   /**
-   * 5 分钟一次网络交易扫描
+   * 5 分钟一次网络交易扫描(解析ETH、ERC20 Token 交易)
    */
   @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
   public void ethTxScan() throws IOException, ExecutionException, InterruptedException {
@@ -32,4 +37,16 @@ public class WalletJob {
     transferService.scanUserTxs();
     log.info("ethTxScan end ...");
   }
-}
+
+  /**
+   * 充值检测 扩展需求
+   */
+  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
+  public void depositTxScan() throws IOException{
+    log.info("depositTxScan start ...");
+
+    transferService.depositTxScan();
+    log.info("depositTxScan end ...");
+  }
+
+  }

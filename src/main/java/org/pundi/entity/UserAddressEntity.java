@@ -40,6 +40,18 @@ public class UserAddressEntity implements Serializable {
     private Integer uid;
 
     /**
+     * 钱包类型{@link org.pundi.constant.WalletTypeEnum}
+     */
+    @TableField("type")
+    private Integer type;
+
+    /**
+     * HD钱包推导索引
+     */
+    @TableField("hd_index")
+    private Integer hdIndex;
+
+    /**
      * 钱包账户名称
      */
     @TableField("wallet_name")

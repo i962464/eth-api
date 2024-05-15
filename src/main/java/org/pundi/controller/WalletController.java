@@ -51,8 +51,8 @@ public class WalletController {
   @PostMapping("/create/address")
   public Result<CreateAddressVO> createAddress(@Valid @RequestBody CreateAddressDTO dto) {
 
-    //目前只实现自有钱包创建
-    CreateAddressVO addressVO = strategyMap.get(WalletTypeEnum.getByCode(0).getValue()).createAddress(dto);
+    //默认使用HD分层钱包
+    CreateAddressVO addressVO = strategyMap.get(WalletTypeEnum.getByCode(1).getValue()).createAddress(dto);
     return Result.success(addressVO);
   }
 

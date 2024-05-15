@@ -11,12 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * @author ekko
  * @version 1.0.0
- * @Description
+ * @Description 根据助记词管理多个地址
  * @createTime 2024年05月11日 22:03:00
  */
 @Slf4j
 public class HDWalletUtil {
 
+
+  public static String mnemonic = "swamp border inhale call name hungry hero cereal economy sunset west income";
 
   // 1. 根据助记词生成根私钥、根公钥
   public static Bip32ECKeyPair generateRootKeyPair(String mnemonic) {
@@ -53,6 +55,18 @@ public class HDWalletUtil {
   }
 
 
+  /**
+   * 根据助记词推导地址
+   * @param mnemonic
+   * @param index
+   */
+  public static String createAccount(String mnemonic, Integer index){
+    // 生成根私钥、根公钥
+    Bip32ECKeyPair rootKeyPair = generateRootKeyPair(mnemonic);
+    return deriveAddress(rootKeyPair, index);
+  }
+
+
   // 4. 测试方法 https://bip39.onekey.so/
   public static void main(String[] args) {
     // 替换为你的助记词
@@ -62,6 +76,9 @@ public class HDWalletUtil {
     Bip32ECKeyPair rootKeyPair = generateRootKeyPair(mnemonic);
     printRootKeyPair(rootKeyPair, mnemonic);
 
+    String a = EthereumUtil.deriveAddressFromExtendPubKey(
+        "c5c87c1389ed5468128cbfaf78f31c9d5ab6b5dcf6557761da0fb14cb87211227d39da0e90865808752023ee498471db425d162f8ffae9c24ef6eb6531922a8", 0);
+    System.out.println(">>>>a=" + a);
     // 测试派生地址
     int index = 0;
     String derivedAddress = deriveAddress(rootKeyPair, index);
@@ -70,8 +87,6 @@ public class HDWalletUtil {
     // 测试派生地址的私钥
     String derivedPrivateKey = derivePrivateKey(rootKeyPair, index);
     System.out.println("Private Key for Derived Address at index " + index + ": " + derivedPrivateKey);
-
-
   }
 
 

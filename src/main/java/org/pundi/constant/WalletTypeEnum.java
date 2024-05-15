@@ -15,8 +15,8 @@ public enum WalletTypeEnum {
   // 自有钱包
   SELF(0, "self"),
 
-  // todo 支持多种钱包类型，需要策略实现
-  OTHER(1, "other");
+  // hd 分层钱包
+  HD(1, "hd");
 
   private Integer code;
   private String value;

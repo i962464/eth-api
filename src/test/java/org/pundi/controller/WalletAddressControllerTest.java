@@ -37,12 +37,12 @@ class WalletAddressControllerTest {
   @Test
   void createAddress() {
     CreateAddressDTO dto = new CreateAddressDTO();
-    dto.setUid(7);
-    dto.setWalletName("钱包测试1");
+    dto.setUid(10);
+    dto.setWalletName("HD钱包测试2");
     dto.setNetworkId(60);
     dto.setSymbol("ETH");
 
-    CreateAddressVO address = walletAddressService.createAddress(dto);
+    Result<CreateAddressVO> address = walletController.createAddress(dto);
     System.out.println(address.toString());
   }
 

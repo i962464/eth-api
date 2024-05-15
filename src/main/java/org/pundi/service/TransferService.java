@@ -41,4 +41,9 @@ public interface TransferService {
    * @return
    */
   IPage<EtherScanVO> getPageTransactions(String symbol, String address, BigInteger startBlock, BigInteger endBlock, Integer page, Integer pageSize);
+
+  /**
+   * 充值检测
+   */
+  void depositTxScan() throws IOException;
 }

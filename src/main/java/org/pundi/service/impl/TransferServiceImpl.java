@@ -3,6 +3,7 @@ package org.pundi.service.impl;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -13,7 +14,6 @@ import org.pundi.constant.NetworkEnum;
 import org.pundi.dto.EthTransferDTO;
 import org.pundi.entity.CurrencyInfoEntity;
 import org.pundi.entity.EthScanBlockEntity;
-import org.pundi.entity.EtherScanRecordEntity;
 import org.pundi.entity.UserAddressEntity;
 import org.pundi.entity.UserEntity;
 import org.pundi.service.CurrencyInfoService;
@@ -24,7 +24,6 @@ import org.pundi.service.UserAddressService;
 import org.pundi.service.UserService;
 import org.pundi.service.UserTransactionsService;
 import org.pundi.util.EthereumUtil;
-import org.pundi.util.ObjectMappingUtil;
 import org.pundi.vo.EtherScanVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -59,6 +58,7 @@ public class TransferServiceImpl implements TransferService {
   private final UserTransactionsService transactionsService;
   private final EthScanBlockService ethScanBlockService;
   private final EtherScanRecordService etherScanRecordService;
+
   @Override
   @Transactional(rollbackFor = Exception.class)
   public String ethTransfer(EthTransferDTO dto) {
@@ -154,7 +154,7 @@ public class TransferServiceImpl implements TransferService {
         }
       }
       //保存记录
-      if(CollectionUtils.isNotEmpty(etherScanVOS)){
+      if (CollectionUtils.isNotEmpty(etherScanVOS)) {
         etherScanRecordService.saveRecord(etherScanVOS);
       }
       //更新区块号
@@ -164,13 +164,47 @@ public class TransferServiceImpl implements TransferService {
 
   @Override
   public IPage<EtherScanVO> getPageTransactions(String symbol, String address, BigInteger startBlock, BigInteger endBlock, Integer page,
-                                           Integer pageSize) {
+                                                Integer pageSize) {
 
     CurrencyInfoEntity currencyInfo = currencyInfoService.queryByNetworkIdAndAsset(60, symbol);
-    if(Objects.isNull(currencyInfo)){
+    if (Objects.isNull(currencyInfo)) {
       throw new RuntimeException(ResultCode.CURRENCY_NOT_FOUND.getMsg());
     }
     String contractAddress = currencyInfo.getContractAddress();
     return etherScanRecordService.pageByParams(address, contractAddress, startBlock, endBlock, page, pageSize);
+  }
+
+  @Override
+  public void depositTxScan() throws IOException {
+
+    List<CurrencyInfoEntity> currencyInfoList = currencyInfoService.list();
+    //支持的网络
+    List<Integer> networkList = currencyInfoList.stream().map(CurrencyInfoEntity::getNetworkId).distinct().collect(Collectors.toList());
+    for (Integer networkId : networkList) {
+
+      //目前只处理ETH网络的token, 后期可根据策略模式拆分
+      if(!networkId.equals(NetworkEnum.ETH.getCode())){
+        continue;
+      }
+      //获取网络支持的token
+      Map<String, String> symbolMap = currencyInfoList.stream().filter(e -> e.getNetworkId().equals(NetworkEnum.ETH.getCode()))
+          .collect(Collectors.toMap(CurrencyInfoEntity::getSymbol, CurrencyInfoEntity::getContractAddress));
+
+      //获取当前区块高度， 暂时先解析一个区块，方便测试
+      BigInteger lastBlock = EthereumUtil.getLastBlock();
+
+      symbolMap.forEach((symbol,tokenAddress)->{
+
+
+
+      });
+
+
+
+    }
+
+
+
+
   }
 }

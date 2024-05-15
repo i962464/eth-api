@@ -6,6 +6,8 @@
     <resultMap id="BaseResultMap" type="org.pundi.entity.UserAddressEntity">
         <id column="id" property="id" />
         <result column="uid" property="uid" />
+        <result column="type" property="type" />
+        <result column="hd_index" property="hdIndex" />
         <result column="wallet_name" property="walletName" />
         <result column="network_id" property="networkId" />
         <result column="asset" property="asset" />
@@ -23,7 +25,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, uid, wallet_name, network_id, asset, address, private_key, tag, state, note, version, deleted, deleted_at, updated_at, created_at
+        id, uid, type,hd_index, wallet_name, network_id, asset, address, private_key, tag, state, note, version, deleted, deleted_at, updated_at, created_at
     </sql>
 
 </mapper>
