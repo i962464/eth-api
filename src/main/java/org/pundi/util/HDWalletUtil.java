@@ -53,7 +53,7 @@ public class HDWalletUtil {
   }
 
 
-  // 4. 测试方法
+  // 4. 测试方法 https://bip39.onekey.so/
   public static void main(String[] args) {
     // 替换为你的助记词
     String mnemonic = "swamp border inhale call name hungry hero cereal economy sunset west income";
