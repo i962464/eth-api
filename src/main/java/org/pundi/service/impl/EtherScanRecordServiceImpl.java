@@ -1,6 +1,7 @@
 package org.pundi.service.impl;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,5 +51,12 @@ public class EtherScanRecordServiceImpl extends ServiceImpl<EtherScanRecordMappe
 
     IPage<EtherScanRecordEntity> pageResult = page(new Page<>(page, pageSize), wrapper);
     return pageResult.convert(e -> ObjectMappingUtil.map(e, EtherScanVO.class));
+  }
+
+  @Override
+  public List<EtherScanRecordEntity> getBySymbols(ArrayList<String> newArrayList) {
+    LambdaQueryWrapper<EtherScanRecordEntity> wrapper = Wrappers.<EtherScanRecordEntity>lambdaQuery();
+    wrapper.in(EtherScanRecordEntity::getTokenName);
+    return list(wrapper);
   }
 }

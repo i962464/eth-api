@@ -1,6 +1,7 @@
 package org.pundi.service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.pundi.entity.EtherScanRecordEntity;
@@ -22,4 +23,6 @@ public interface EtherScanRecordService extends IService<EtherScanRecordEntity> 
   boolean saveRecord(List<EtherScanVO> etherScanVOS);
 
   IPage<EtherScanVO> pageByParams(String address, String contractAddress, BigInteger startBlock, BigInteger endBlock, Integer page, Integer pageSize);
+
+  List<EtherScanRecordEntity> getBySymbols(ArrayList<String> newArrayList);
 }

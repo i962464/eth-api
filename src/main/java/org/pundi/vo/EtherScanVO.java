@@ -21,6 +21,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EtherScanVO {
 
+  @ApiModelProperty(notes = "用户ID")
+  private Integer uid;
+
   @ApiModelProperty(notes = "区块号")
   private BigInteger blockNum;
 
@@ -44,4 +47,5 @@ public class EtherScanVO {
 
   @ApiModelProperty(notes = "交易hash")
   private String transactionHash;
+
 }

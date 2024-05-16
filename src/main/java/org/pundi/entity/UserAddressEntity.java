@@ -12,11 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * <p>
- * 钱包充值地址表
- * </p>
- *
- * @author 
+ * @author 一个用户， 一个网络只能有一个地址
  * @since 2024-05-11
  */
 @Data

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.pundi.constant.WalletTypeEnum;
+import org.pundi.service.DepositCollectionService;
 import org.pundi.service.TransferService;
 import org.pundi.service.UserTransactionsService;
 import org.pundi.strategy.WalletStrategy;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WalletJob {
 
   private final TransferService transferService;
+  private final DepositCollectionService collectionService;
 
   /**
    * 5 分钟一次网络交易扫描(解析ETH、ERC20 Token 交易)
@@ -39,14 +41,14 @@ public class WalletJob {
   }
 
   /**
-   * 充值检测 扩展需求
+   * 充值归集
    */
   @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
   public void depositTxScan() throws IOException{
-    log.info("depositTxScan start ...");
+    log.info("depositCollection start ...");
 
-    transferService.depositTxScan();
-    log.info("depositTxScan end ...");
+    collectionService.depositCollection();
+    log.info("depositCollection end ...");
   }
 
   }

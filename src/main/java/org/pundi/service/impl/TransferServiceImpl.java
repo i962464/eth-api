@@ -1,22 +1,28 @@
 package org.pundi.service.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.pundi.common.ResultCode;
+import org.pundi.constant.AssetCollectionStatusEnum;
 import org.pundi.constant.NetworkEnum;
 import org.pundi.dto.EthTransferDTO;
 import org.pundi.entity.CurrencyInfoEntity;
+import org.pundi.entity.DepositTxRecordEntity;
 import org.pundi.entity.EthScanBlockEntity;
 import org.pundi.entity.UserAddressEntity;
 import org.pundi.entity.UserEntity;
 import org.pundi.service.CurrencyInfoService;
+import org.pundi.service.DepositTxRecordService;
 import org.pundi.service.EthScanBlockService;
 import org.pundi.service.EtherScanRecordService;
 import org.pundi.service.TransferService;
@@ -28,9 +34,13 @@ import org.pundi.vo.EtherScanVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.utils.Convert;
+import org.web3j.utils.Convert.Unit;
+import org.web3j.utils.Numeric;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -58,6 +68,7 @@ public class TransferServiceImpl implements TransferService {
   private final UserTransactionsService transactionsService;
   private final EthScanBlockService ethScanBlockService;
   private final EtherScanRecordService etherScanRecordService;
+  private final DepositTxRecordService depositTxRecordService;
 
   @Override
   @Transactional(rollbackFor = Exception.class)
@@ -128,9 +139,11 @@ public class TransferServiceImpl implements TransferService {
     //最新区块
     BigInteger newBlock = EthereumUtil.getLastBlock();
 
+    //用户地址
     List<UserAddressEntity> addressEntityList = addressService.list();
     List<String> addressList = addressEntityList.stream().map(e -> e.getAddress().toLowerCase()).collect(Collectors.toList());
-//    addressList.add("0xeb563578c5010ce408dcb35085cc1481984cddf1");
+    Map<String, Integer> addressUidMap = addressEntityList.stream()
+        .collect(Collectors.toMap(UserAddressEntity::getAddress, UserAddressEntity::getUid));
 
     // 遍历开始区块和结束区块之间的每个区块
     for (BigInteger blockNumber = lastSyncBlock; blockNumber.compareTo(newBlock) <= 0; blockNumber = blockNumber.add(BigInteger.ONE)) {
@@ -156,6 +169,13 @@ public class TransferServiceImpl implements TransferService {
       //保存记录
       if (CollectionUtils.isNotEmpty(etherScanVOS)) {
         etherScanRecordService.saveRecord(etherScanVOS);
+
+        //新增一个需求， 添加充值交易归集。deposit_tx_record,以后汇集查询这张表不影响其他业务
+        List<EtherScanVO> depositScans = etherScanVOS.stream().filter(e -> addressList.contains(e.getReceiverAddress())).collect(Collectors.toList());
+        List<EtherScanVO> newDepositScans = depositScans.stream().peek(e -> e.setUid(addressUidMap.get(e.getReceiverAddress())))
+            .collect(Collectors.toList());
+        depositTxRecordService.saveRecord(newDepositScans);
+        //todo 这里还可以创建充币的订单
       }
       //更新区块号
       ethScanBlockService.updateBlockNumber(blockNumber);
@@ -174,37 +194,5 @@ public class TransferServiceImpl implements TransferService {
     return etherScanRecordService.pageByParams(address, contractAddress, startBlock, endBlock, page, pageSize);
   }
 
-  @Override
-  public void depositTxScan() throws IOException {
 
-    List<CurrencyInfoEntity> currencyInfoList = currencyInfoService.list();
-    //支持的网络
-    List<Integer> networkList = currencyInfoList.stream().map(CurrencyInfoEntity::getNetworkId).distinct().collect(Collectors.toList());
-    for (Integer networkId : networkList) {
-
-      //目前只处理ETH网络的token, 后期可根据策略模式拆分
-      if(!networkId.equals(NetworkEnum.ETH.getCode())){
-        continue;
-      }
-      //获取网络支持的token
-      Map<String, String> symbolMap = currencyInfoList.stream().filter(e -> e.getNetworkId().equals(NetworkEnum.ETH.getCode()))
-          .collect(Collectors.toMap(CurrencyInfoEntity::getSymbol, CurrencyInfoEntity::getContractAddress));
-
-      //获取当前区块高度， 暂时先解析一个区块，方便测试
-      BigInteger lastBlock = EthereumUtil.getLastBlock();
-
-      symbolMap.forEach((symbol,tokenAddress)->{
-
-
-
-      });
-
-
-
-    }
-
-
-
-
-  }
 }

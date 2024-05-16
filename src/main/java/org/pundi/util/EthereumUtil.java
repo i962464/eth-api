@@ -3,6 +3,7 @@ package org.pundi.util;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -211,6 +212,7 @@ public class EthereumUtil {
     return Keys.toChecksumAddress(addr);
   }
 
+  //todo 这个方法有问题，后续修改
   public static String getHDPrivateKey(String extKey, int addressIndex) {
 
     DeterministicKey parentKey = DeterministicKey.deserializeB58(extKey, MainNetParams.get());
@@ -529,7 +531,8 @@ public class EthereumUtil {
               .amount(amount)
               .tokenName(getTokenSymbol(tokenAddress))
               .tokenAddress(tokenAddress)
-              .transactionHash(transactionHash).build());
+              .transactionHash(transactionHash)
+              .build());
         }
       }
     }
@@ -621,4 +624,59 @@ public class EthereumUtil {
     return ((Utf8String) decode.get(0)).getValue();
   }
 
+
+  /**
+   * 将 BigInteger 转化为 BigDecimal, 默认采用 "银行家舍入"
+   *
+   * @param val      原始值
+   * @param decimals 精度
+   * @return 结果
+   */
+  public static BigDecimal withDecimal(BigInteger val, int decimals) {
+
+    return withDecimal(val, decimals, RoundingMode.HALF_EVEN);
+  }
+
+  /**
+   * 将 BigInteger 转化为 BigDecimal
+   *
+   * @param val      原始值
+   * @param decimals 精度
+   * @param rm       舍入方式
+   * @return 结果
+   */
+  public static BigDecimal withDecimal(BigInteger val, int decimals, RoundingMode rm) {
+
+    BigDecimal value = new BigDecimal(val);
+    BigDecimal precision = BigDecimal.valueOf(10L).pow(decimals);
+
+    return value.divide(precision, decimals, rm);
+  }
+
+  /**
+   * 对交易进行签名
+   * @param rawTransaction 未签名的交易
+   * @param privateKey 发送方私钥
+   * @return 签名后的交易数据
+   */
+  public static byte[] signTransaction(RawTransaction rawTransaction, String privateKey) {
+    Credentials credentials = Credentials.create(privateKey);
+    return TransactionEncoder.signMessage(rawTransaction, credentials);
+  }
+
+  /**
+   * 发送已签名的交易到以太坊网络
+   * @param signedTransaction 签名后的交易数据
+   * @return 交易哈希
+   * @throws IOException
+   * @throws InterruptedException
+   * @throws ExecutionException
+   */
+  public static String sendSignedTransaction(String signedTransaction) throws IOException, InterruptedException, ExecutionException {
+    EthSendTransaction ethSendTransaction = getWeb3j().ethSendRawTransaction(signedTransaction).sendAsync().get();
+    if (ethSendTransaction.hasError()) {
+      throw new RuntimeException("Error occurred while sending transaction: " + ethSendTransaction.getError().getMessage());
+    }
+    return ethSendTransaction.getTransactionHash();
+  }
 }

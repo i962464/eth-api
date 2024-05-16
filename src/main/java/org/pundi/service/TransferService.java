@@ -2,7 +2,6 @@ package org.pundi.service;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.pundi.dto.EthTransferDTO;
@@ -42,8 +41,5 @@ public interface TransferService {
    */
   IPage<EtherScanVO> getPageTransactions(String symbol, String address, BigInteger startBlock, BigInteger endBlock, Integer page, Integer pageSize);
 
-  /**
-   * 充值检测
-   */
-  void depositTxScan() throws IOException;
+
 }
