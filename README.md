@@ -48,10 +48,34 @@
     * 如果是ETH交易，根据transactionHash 获取EthTransaction
     * 如果是ERC20交易，根据logs中topics解析topic[0]="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef" 并且from & to 地址都不为0的交易
     * 保存tx_record记录
+## 扩展1-⽤户提交转账申请，⾃动打款到⽤户指定地址
+    获取用户地址， 遍历转账，这样会有并发的问题，比如：交易顺序不确定、Nonce 碰撞等问题
+    这里使用的是Queue模拟个MQ， 顺序消费
+    public void multipleTransfer() throws IOException, ExecutionException, InterruptedException {
 
-## 监听以太坊地址资产变动
+    MultipleTransferQueue multipleQueue = new MultipleTransferQueue();
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f71").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f72").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f73").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f74").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f75").amount(BigDecimal.ONE).build());
+
+    String tokenAddress = "0x67550Df3290415611F6C140c81Cd770Ff1742cb9";
+    String fromAddress = "0x8ce4092e890c5e21d1596156edc73ab00242b20d";
+    String fromPrivateKey = "11e807ffd2af91ad19a093c9613f116139848b6bf10f9fb8f2f0f138f7b44ec4";
+
+    while (!multipleQueue.getTransactionQueue().isEmpty()) {
+      //队列中获取并移除下一个交易信息（TransferInfo）。这样可以确保每次处理队列时，都是处理队头的交易信息，从而按顺序发送交易
+      TransferInfo transferInfo = multipleQueue.getTransactionQueue().poll();
+      String toAddress = transferInfo.getToAddress();
+      BigInteger amount = Convert.toWei(transferInfo.getAmount(), Unit.ETHER).toBigInteger();
+      String txHash = EthereumUtil.tokenTransfer(fromAddress, toAddress, tokenAddress, amount, fromPrivateKey);
+      log.info(">>>multipleTransfer txHash = {}", txHash);
+    }
+当然这里也会有问题， 就是一笔转账就消耗一笔gas， 有没有一种方法可以把多个交易打包一次提交呢？正在调研
+## 扩展2-监听以太坊地址资产变动
     * 同上，监听transfer交易的地址， 则认为资产有变动
-## 如何做到给定任意地址查询出地址下的所有以太坊ERC20资产
+## 扩展3-如何做到给定任意地址查询出地址下的所有以太坊ERC20资产
 ### 不确定有哪些资产
     * 如果不确定有哪些资产的时候同上，根据区块获取交易结果
     * EthBlock ethBlock = EthereumUtil.getWeb3j().ethGetBlockByNumber().send();

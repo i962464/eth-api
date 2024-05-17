@@ -42,4 +42,8 @@ public interface TransferService {
   IPage<EtherScanVO> getPageTransactions(String symbol, String address, BigInteger startBlock, BigInteger endBlock, Integer page, Integer pageSize);
 
 
+  /**
+   * 批量转账
+   */
+  void multipleTransfer() throws IOException, ExecutionException, InterruptedException;
 }

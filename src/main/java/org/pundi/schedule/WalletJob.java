@@ -1,15 +1,10 @@
 package org.pundi.schedule;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.pundi.constant.WalletTypeEnum;
 import org.pundi.service.DepositCollectionService;
 import org.pundi.service.TransferService;
-import org.pundi.service.UserTransactionsService;
-import org.pundi.strategy.WalletStrategy;
-import org.pundi.vo.CreateAddressVO;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -41,14 +36,25 @@ public class WalletJob {
   }
 
   /**
-   * 充值归集
+   * 充值归集 https://sepolia.etherscan.io/address/0x8ce4092e890c5e21d1596156edc73ab00242b20d
    */
   @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
-  public void depositTxScan() throws IOException{
+  public void depositTxScan() throws IOException {
     log.info("depositCollection start ...");
 
     collectionService.depositCollection();
     log.info("depositCollection end ...");
   }
 
+  /**
+   * 批量转账
+   * @throws IOException
+   */
+  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
+  public void multipleTransfer() throws IOException, ExecutionException, InterruptedException {
+
+    transferService.multipleTransfer();
   }
+
+
+}

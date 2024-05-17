@@ -1,6 +1,7 @@
 package org.pundi.service.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.pundi.common.ResultCode;
 import org.pundi.constant.NetworkEnum;
 import org.pundi.dto.EthTransferDTO;
+import org.pundi.dto.MultipleTransferQueue;
+import org.pundi.dto.MultipleTransferQueue.TransferInfo;
 import org.pundi.entity.CurrencyInfoEntity;
 import org.pundi.entity.EthScanBlockEntity;
 import org.pundi.entity.UserAddressEntity;
@@ -32,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.utils.Convert;
+import org.web3j.utils.Convert.Unit;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -185,6 +190,31 @@ public class TransferServiceImpl implements TransferService {
     }
     String contractAddress = currencyInfo.getContractAddress();
     return etherScanRecordService.pageByParams(address, contractAddress, startBlock, endBlock, page, pageSize);
+  }
+
+  @Override
+  public void multipleTransfer() throws IOException, ExecutionException, InterruptedException {
+
+    MultipleTransferQueue multipleQueue = new MultipleTransferQueue();
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f71").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f72").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f73").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f74").amount(BigDecimal.ONE).build());
+    multipleQueue.addToQueue(TransferInfo.builder().toAddress("0x76f043cB90FaAFf31CC28091319f3F200df93f75").amount(BigDecimal.ONE).build());
+
+    String tokenAddress = "0x67550Df3290415611F6C140c81Cd770Ff1742cb9";
+    String fromAddress = "0x8ce4092e890c5e21d1596156edc73ab00242b20d";
+    String fromPrivateKey = "11e807ffd2af91ad19a093c9613f116139848b6bf10f9fb8f2f0f138f7b44ec4";
+
+    while (!multipleQueue.getTransactionQueue().isEmpty()) {
+      //队列中获取并移除下一个交易信息（TransferInfo）。这样可以确保每次处理队列时，都是处理队头的交易信息，从而按顺序发送交易
+      TransferInfo transferInfo = multipleQueue.getTransactionQueue().poll();
+      String toAddress = transferInfo.getToAddress();
+      BigInteger amount = Convert.toWei(transferInfo.getAmount(), Unit.ETHER).toBigInteger();
+      String txHash = EthereumUtil.tokenTransfer(fromAddress, toAddress, tokenAddress, amount, fromPrivateKey);
+      log.info(">>>multipleTransfer txHash = {}", txHash);
+    }
+
   }
 
 

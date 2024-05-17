@@ -88,4 +88,10 @@ class WalletAddressControllerTest {
     Result<List<AssetVO>> tokensBalance = walletController.getTokensBalance("0x8ce4092e890c5e21d1596156edc73ab00242b20d");
     System.out.println(tokensBalance.toString());
   }
+
+  @Test
+  void multipleTransfer() throws IOException, ExecutionException, InterruptedException {
+    walletJob.multipleTransfer();
+    System.out.println("success");
+  }
 }

@@ -8,6 +8,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -373,10 +374,12 @@ public class EthereumUtil {
     Function funcABI = new Function("transfer", inputArgs, outputArgs);
     String data = FunctionEncoder.encode(funcABI);
     // 构建交易
-    Transaction transaction = Transaction.createFunctionCallTransaction(from, nonce, gasPrice, null,
-        contractAddress, data);
+//    Transaction transaction = Transaction.createFunctionCallTransaction(from, nonce, gasPrice, null,
+//        contractAddress, data);
     // 计算gasLimit
-    BigInteger gasLimit = getTxGasLimit(transaction).multiply(BigInteger.valueOf(3L));
+//    BigInteger gasLimit = getTxGasLimit(transaction).multiply(BigInteger.valueOf(1L));
+    BigInteger gasLimit = getGaslimit("transfer", from, contractAddress);
+
     // 查询调用者余额，检测余额是否充足
     BigInteger balance = getBalance(from);
     // balance <  gasLimit ??
@@ -493,6 +496,36 @@ public class EthereumUtil {
       return ethEstimateGas.getAmountUsed();
     } catch (IOException e) {
       throw new RuntimeException("net error");
+    }
+  }
+
+
+  /**
+   * @param cname 调用合约的名字
+   * @param address 调用合约的地址
+   * @param contractAddress 合约地址
+   * @return
+   * @throws IOException
+   */
+  public static BigInteger getGaslimit(String cname, String address, String contractAddress) throws IOException {
+    Web3j web3j = getWeb3j();
+    String function = cname;
+    List<Type> inputParams = List.of();
+    Function contractFunction = new Function(function, inputParams, Collections.emptyList());
+
+    EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
+        Transaction.createEthCallTransaction(
+            address,
+            contractAddress,
+            FunctionEncoder.encode(contractFunction)
+        )
+    ).send();
+
+    if (ethEstimateGas.hasError()) {
+//            System.out.println("获取 gas 上限时发生错误: " + ethEstimateGas.getError().getMessage());
+      return BigInteger.valueOf(150_000);
+    } else {
+      return ethEstimateGas.getAmountUsed();
     }
   }
 
