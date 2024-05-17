@@ -1,23 +1,18 @@
 package org.pundi.service.impl;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.pundi.common.ResultCode;
-import org.pundi.constant.AssetCollectionStatusEnum;
 import org.pundi.constant.NetworkEnum;
 import org.pundi.dto.EthTransferDTO;
 import org.pundi.entity.CurrencyInfoEntity;
-import org.pundi.entity.DepositTxRecordEntity;
 import org.pundi.entity.EthScanBlockEntity;
 import org.pundi.entity.UserAddressEntity;
 import org.pundi.entity.UserEntity;
@@ -34,13 +29,9 @@ import org.pundi.vo.EtherScanVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.utils.Convert;
-import org.web3j.utils.Convert.Unit;
-import org.web3j.utils.Numeric;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -151,6 +142,8 @@ public class TransferServiceImpl implements TransferService {
       List<EtherScanVO> etherScanVOS = Lists.newArrayList();
 
       // 获取当前区块的详细信息,TransactionResult 对象表示一个交易结果，而 TransactionReceipt 对象则表示一个交易收据
+      //EthBlock ethBlock = EthereumUtil.getWeb3j().ethGetBlockByNumber().send();
+      //List<TransactionResult> transactions = ethBlock.getBlock().getTransactions();
       // transactionResult 区分ETH，ERC20 token 只能根据ETH 的amount 是否大于0来区分，但是to地址有可能是合约地址，不是真正的用户地址
       List<TransactionReceipt> transactionReceipts = EthereumUtil.getWeb3j().ethGetBlockReceipts(DefaultBlockParameter.valueOf(blockNumber)).send()
           .getBlockReceipts().get();

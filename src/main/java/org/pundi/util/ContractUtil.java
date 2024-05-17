@@ -3,6 +3,7 @@ package org.pundi.util;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
 import org.pundi.common.ContractBaseParam;
@@ -10,7 +11,9 @@ import org.pundi.contract.Erc20TokenContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.RawTransaction;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.TransactionManager;
@@ -62,10 +65,9 @@ public class ContractUtil {
       //读合约可以不传私钥， 这里从配置写死只为获取Credentials对象
       privateKey = "7b29a189fc90cec6cd58c4c12196273d3c7408da1c47a638a4c73c42ff328d60";
     }
+    //创建交易凭证
     Credentials credentials = Credentials.create(privateKey);
-//    ContractGasProvider gasProvider = getContractGasProvider(baseParam);
-    ContractGasProvider gasProvider = new DefaultGasProvider();
-
+    ContractGasProvider gasProvider = getContractGasProvider(baseParam);
 
     Long chainId = baseParam.getChainId();
     Web3j web3j = Web3j.build(new HttpService(baseParam.getRpcEndpoint(),okHttpClient));
@@ -76,5 +78,28 @@ public class ContractUtil {
     return Erc20TokenContract.load(baseParam.getContractAddress(), web3j, transactionManager, gasProvider);
   }
 
+  /**
+   * 手动设置gas
+   * @param privateKey
+   * @param baseParam
+   * @return
+   */
+  public Erc20TokenContract getErc20TokenContractManualGas(String privateKey, ContractBaseParam baseParam) {
+    if(StringUtils.isBlank(privateKey)){
+      //读合约可以不传私钥， 这里从配置写死只为获取Credentials对象
+      privateKey = "7b29a189fc90cec6cd58c4c12196273d3c7408da1c47a638a4c73c42ff328d60";
+    }
+    //创建交易凭证
+    Credentials credentials = Credentials.create(privateKey);
+    ContractGasProvider gasProvider = getContractGasProvider(baseParam);
 
+
+    Long chainId = baseParam.getChainId();
+    Web3j web3j = Web3j.build(new HttpService(baseParam.getRpcEndpoint(),okHttpClient));
+    if (Objects.isNull(chainId)) {
+      return Erc20TokenContract.load(baseParam.getContractAddress(), web3j, credentials, gasProvider);
+    }
+    TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, chainId, 1, 1000);
+    return Erc20TokenContract.load(baseParam.getContractAddress(), web3j, transactionManager, gasProvider);
+  }
 }
