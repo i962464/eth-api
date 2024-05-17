@@ -2,6 +2,7 @@ package org.pundi.controller;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.annotation.Resource;
 
@@ -11,6 +12,7 @@ import org.pundi.dto.CreateAddressDTO;
 import org.pundi.dto.EthTransferDTO;
 import org.pundi.schedule.WalletJob;
 import org.pundi.service.UserAddressService;
+import org.pundi.vo.AssetVO;
 import org.pundi.vo.CreateAddressVO;
 import org.pundi.vo.EtherScanVO;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -79,5 +81,11 @@ class WalletAddressControllerTest {
     Result<IPage<EtherScanVO>> aEthDAI = walletController.transactions("aEthDAI", "0xb25fdff8d86c85eb5e9b455b71487ce76f086dff1",
         new BigInteger("5880298"), new BigInteger("5891928"), 1, 10);
     System.out.println(JSONUtil.toJsonStr(aEthDAI));
+  }
+
+  @Test
+  void getTokensBalance() throws Exception {
+    Result<List<AssetVO>> tokensBalance = walletController.getTokensBalance("0x8ce4092e890c5e21d1596156edc73ab00242b20d");
+    System.out.println(tokensBalance.toString());
   }
 }

@@ -52,14 +52,17 @@
 ## 监听以太坊地址资产变动
     * 同上，监听transfer交易的地址， 则认为资产有变动
 ## 如何做到给定任意地址查询出地址下的所有以太坊ERC20资产
-    * 同上，根据区块获取交易结果
+### 不确定有哪些资产
+    * 如果不确定有哪些资产的时候同上，根据区块获取交易结果
     * EthBlock ethBlock = EthereumUtil.getWeb3j().ethGetBlockByNumber().send();
     List<TransactionResult> transactions = ethBlock.getBlock().getTransactions();
     * 过滤交易结果中的value等于0的记录
     * 根据用户地址， 判断from， to 则为Erc20 token 地址
     * 根据EthereumUtil#getTokenSymbol 获取token简称
     * 根据EthereumUtil#getCoinName 获取token名称
-
+    * 保存token信息
+### 查询本平台支持的token 余额
+    */wallet/getTokensBalance，可与上一步配合， 查询所有Erc20资产
 
 ##  充值归集(这里是伪代码，没有提供签名服务，使用的依旧是EthereumUtil工具类接口)
 ### 步骤

@@ -10,8 +10,10 @@ import org.pundi.common.Result;
 import org.pundi.constant.WalletTypeEnum;
 import org.pundi.dto.CreateAddressDTO;
 import org.pundi.dto.EthTransferDTO;
+import org.pundi.service.AssetService;
 import org.pundi.service.TransferService;
 import org.pundi.strategy.WalletStrategy;
+import org.pundi.vo.AssetVO;
 import org.pundi.vo.CreateAddressVO;
 import org.pundi.vo.EtherScanVO;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +42,7 @@ public class WalletController {
 
   private final TransferService transferService;
   private final Map<String, WalletStrategy> strategyMap;
+  private final AssetService assetService;
 
   /**
    * todo 用户登录，根据用户token 获取用户ID
@@ -76,6 +79,15 @@ public class WalletController {
 
     IPage<EtherScanVO> pageTransactions = transferService.getPageTransactions(symbol, address, startBlock, endBlock, page, pageSize);
     return Result.success(pageTransactions);
+  }
+
+
+  @ApiOperation(value = "根据指定地址查询平台上Erc20资产", notes = "")
+  @GetMapping("/getTokensBalance")
+  public Result<List<AssetVO>> getTokensBalance(@RequestParam String address) throws Exception {
+
+    List<AssetVO> assetVOS= assetService.queryAssetByAddress(address);
+    return Result.success(assetVOS);
   }
 }
 
