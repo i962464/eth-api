@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.pundi.common.ResultCode;
+import org.pundi.constant.NetworkEnum;
 import org.pundi.dto.CreateAddressDTO;
 import org.pundi.entity.CurrencyInfoEntity;
 import org.pundi.entity.UserAddressEntity;
@@ -37,7 +38,7 @@ public class SelfWalletServiceImpl extends BaseAbsServer implements WalletStrate
   @Override
   public CreateAddressVO createAddress(CreateAddressDTO dto) {
 
-    String asset = dto.getSymbol().toUpperCase();
+    String asset = NetworkEnum.getByCode(dto.getNetworkId()).getValue().toUpperCase();
     Integer networkId = dto.getNetworkId();
     Integer uid = dto.getUid();
     String walletName = dto.getWalletName();

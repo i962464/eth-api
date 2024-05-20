@@ -41,11 +41,11 @@ public class CreateAddressDTO {
   @ApiModelProperty(notes = "网络ID", example = "60")
   private Integer networkId;
 
-  /**
-   * 对应资产(币种),如: ETH
-   */
-  @NotBlank(message = "对应资产(币种)不能为空")
-  @ApiModelProperty(notes = "币种" , example = "ETH")
-  private String symbol;
+//  /**
+//   * 对应资产(币种),如: ETH
+//   */
+//  @NotBlank(message = "对应资产(币种)不能为空")
+//  @ApiModelProperty(notes = "币种" , example = "ETH")
+//  private String symbol;
 
 }

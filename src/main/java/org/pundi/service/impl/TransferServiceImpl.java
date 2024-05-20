@@ -3,6 +3,7 @@ package org.pundi.service.impl;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,10 +29,12 @@ import org.pundi.service.UserAddressService;
 import org.pundi.service.UserService;
 import org.pundi.service.UserTransactionsService;
 import org.pundi.util.EthereumUtil;
+import org.pundi.util.HDWalletUtil;
 import org.pundi.vo.EtherScanVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.web3j.crypto.Bip32ECKeyPair;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -105,16 +108,27 @@ public class TransferServiceImpl implements TransferService {
       throw new RuntimeException(ResultCode.ADDRESS_NOT_EXIST.getMsg());
 
     }
+
+    String privateKey = addressEntity.getPrivateKey();
+    if(StringUtils.isBlank(privateKey)){
+      // 获取安全保存的助记词
+      String mnemonic = "swamp border inhale call name hungry hero cereal economy sunset west income";
+      // 生成根私钥、根公钥
+      Bip32ECKeyPair rootKeyPair = HDWalletUtil.generateRootKeyPair(mnemonic);
+      privateKey = HDWalletUtil.derivePrivateKey(rootKeyPair, addressEntity.getHdIndex());
+    }
     //交易
     try {
       String txHash;
       if (StringUtils.isNotBlank(tokenAddress)) {
-        txHash = EthereumUtil.tokenTransfer(addressEntity.getAddress(), toAddress, tokenAddress, amount, addressEntity.getPrivateKey());
+
+        txHash = EthereumUtil.tokenTransfer(addressEntity.getAddress(), toAddress, tokenAddress, amount, privateKey);
       } else {
-        txHash = EthereumUtil.ethTransfer(addressEntity.getAddress(), toAddress, amount, addressEntity.getPrivateKey());
+        txHash = EthereumUtil.ethTransfer(addressEntity.getAddress(), toAddress, amount, privateKey);
       }
       //保存记录
-      transactionsService.saveRecord(uid, addressEntity.getAddress(), toAddress, amount, currencyInfo, txHash);
+      BigDecimal decimal = new BigDecimal(Convert.fromWei(amount.toString(), Unit.ETHER).setScale(18, RoundingMode.HALF_DOWN).toPlainString());
+      transactionsService.saveRecord(uid, addressEntity.getAddress(), toAddress, decimal, currencyInfo, txHash);
       return txHash;
     } catch (ExecutionException | InterruptedException | IOException e) {
       throw new RuntimeException(ResultCode.ERROR.getMsg());

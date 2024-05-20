@@ -1,5 +1,6 @@
 package org.pundi.service;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.pundi.entity.CurrencyInfoEntity;
@@ -16,5 +17,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserTransactionsService extends IService<UserTransactionsEntity> {
 
-  boolean saveRecord(Integer uid, String address, String toAddress, BigInteger amount, CurrencyInfoEntity currencyInfo, String txHash);
+  boolean saveRecord(Integer uid, String address, String toAddress, BigDecimal amount, CurrencyInfoEntity currencyInfo, String txHash);
 }

@@ -1,5 +1,6 @@
 package org.pundi.entity;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.pundi.common.BaseEntity;
@@ -41,7 +42,7 @@ public class UserTransactionsEntity extends BaseEntity {
   private String receiverAddress;
 
   @TableField("amount")
-  private BigInteger amount;
+  private BigDecimal amount;
 
   @TableField("token_name")
   private String tokenName;

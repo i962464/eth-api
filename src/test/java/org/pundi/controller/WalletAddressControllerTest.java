@@ -42,7 +42,6 @@ class WalletAddressControllerTest {
     dto.setUid(10);
     dto.setWalletName("HD钱包测试2");
     dto.setNetworkId(60);
-    dto.setSymbol("ETH");
 
     Result<CreateAddressVO> address = walletController.createAddress(dto);
     System.out.println(address.toString());

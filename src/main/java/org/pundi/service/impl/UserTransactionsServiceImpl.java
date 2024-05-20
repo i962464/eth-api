@@ -1,5 +1,6 @@
 package org.pundi.service.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.pundi.entity.CurrencyInfoEntity;
@@ -22,7 +23,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 public class UserTransactionsServiceImpl extends ServiceImpl<UserTransactionsMapper, UserTransactionsEntity> implements UserTransactionsService {
 
   @Override
-  public boolean saveRecord(Integer uid, String address, String toAddress, BigInteger amount, CurrencyInfoEntity currencyInfo,
+  public boolean saveRecord(Integer uid, String address, String toAddress, BigDecimal amount, CurrencyInfoEntity currencyInfo,
                             String txHash) {
     return save(UserTransactionsEntity.builder()
         .uid(uid)

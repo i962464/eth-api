@@ -42,7 +42,7 @@ ALTER TABLE `currency_info`
 -- 钱包地址列表
 CREATE TABLE `user_address`
 (
-    `id`          BIGINT UNSIGNED unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `id`          BIGINT(64) UNSIGNED unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `uid`         int(64)          NOT NULL COMMENT '用户ID',
     `type`        tinyint(4)       NOT NULL COMMENT '钱包类型0-随机钱包，2-hd分层钱包',
     `hd_index`    int(64) COMMENT 'hd分层钱包推导索引',
@@ -88,7 +88,7 @@ CREATE TABLE user_transactions
     `uid`            int(64)     NOT NULL COMMENT '用户ID',
     sender_address   VARCHAR(42) NOT NULL,
     receiver_address VARCHAR(42) NOT NULL,
-    amount           BIGINT      NOT NULL,
+    amount           decimal(32,18)      NOT NULL,
     token_name       VARCHAR(42) NOT NULL,
     token_address    VARCHAR(64) NOT NULL,
     transaction_hash VARCHAR(66) NOT NULL
@@ -111,7 +111,7 @@ CREATE TABLE ether_scan_record
     block_hash       VARCHAR(128) NOT NULL,
     sender_address   VARCHAR(64)  NOT NULL,
     receiver_address VARCHAR(64)  NOT NULL,
-    amount           BIGINT       NOT NULL,
+    amount           decimal(32, 18)       NOT NULL,
     token_name       VARCHAR(32)  NOT NULL,
     token_address    VARCHAR(64) default null,
     transaction_hash VARCHAR(128) NOT NULL
@@ -133,7 +133,7 @@ CREATE TABLE deposit_tx_record
     block_hash        VARCHAR(128) NOT NULL,
     sender_address    VARCHAR(64)  NOT NULL,
     receiver_address  VARCHAR(64)  NOT NULL,
-    amount            BIGINT       NOT NULL,
+    amount            decimal(32,18)       NOT NULL,
     token_name        VARCHAR(32)  NOT NULL,
     token_address     VARCHAR(64)           default null,
     transaction_hash  VARCHAR(128) NOT NULL,

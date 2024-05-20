@@ -113,7 +113,7 @@ public class DepositCollectionServiceImpl implements DepositCollectionService {
             // 先归集代币，等下一次任务找机会归集主网币
             //累计当前token充值金额
             BigDecimal txAmount = newTxRecord.stream()
-                .map(e -> EthereumUtil.withDecimal(e.getAmount(), currencyDecimalsMap.get(tokenAddress)))
+                .map(DepositTxRecordEntity::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             if (txAmount.compareTo(BigDecimal.ONE) < 0) {

@@ -7,8 +7,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author ekko
@@ -18,6 +21,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EthTransferDTO {
 
 
@@ -25,7 +30,7 @@ public class EthTransferDTO {
   @ApiModelProperty(notes = "当前用户ID")
   private Integer uid;
 
-  @ApiModelProperty(notes="指定发送的token地址，默认为ETH", example = "0x67550Df3290415611F6C140c81Cd770Ff1742cb9")
+  @ApiModelProperty(notes="指定发送的token地址，默认为ETH", example = "0xEDC0d17D2804D6937dd83b993C7A668059bBF78D")
   private String tokenAddress;
 
   @NotBlank(message = "转出地址不能为空")

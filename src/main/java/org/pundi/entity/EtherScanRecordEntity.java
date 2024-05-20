@@ -1,6 +1,7 @@
 package org.pundi.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
@@ -42,7 +43,7 @@ public class EtherScanRecordEntity implements Serializable {
   private String receiverAddress;
 
   @TableField("amount")
-  private BigInteger amount;
+  private BigDecimal amount;
 
   @TableField("token_name")
   private String tokenName;

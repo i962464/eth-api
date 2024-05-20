@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.pundi.common.ResultCode;
+import org.pundi.constant.NetworkEnum;
 import org.pundi.constant.WalletTypeEnum;
 import org.pundi.dto.CreateAddressDTO;
 import org.pundi.entity.CurrencyInfoEntity;
@@ -38,8 +39,8 @@ public class HdWalletServiceImpl extends BaseAbsServer implements WalletStrategy
   @Override
   public CreateAddressVO createAddress(CreateAddressDTO dto) {
 
-    String asset = dto.getSymbol().toUpperCase();
     Integer networkId = dto.getNetworkId();
+    String asset = NetworkEnum.getByCode(networkId).getValue().toUpperCase();
     Integer uid = dto.getUid();
     String walletName = dto.getWalletName();
 

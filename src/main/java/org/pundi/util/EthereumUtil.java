@@ -213,14 +213,6 @@ public class EthereumUtil {
     return Keys.toChecksumAddress(addr);
   }
 
-  //todo 这个方法有问题，后续修改
-  public static String getHDPrivateKey(String extKey, int addressIndex) {
-
-    DeterministicKey parentKey = DeterministicKey.deserializeB58(extKey, MainNetParams.get());
-    DeterministicKey childKey = HDKeyDerivation.deriveChildKey(parentKey, addressIndex);
-    String privateKey = childKey.getPrivateKeyAsHex();
-    return privateKey;
-  }
 
   // 将字节数组转换为十六进制字符串
   private static String bytesToHex(byte[] bytes) {
@@ -376,9 +368,9 @@ public class EthereumUtil {
     // 构建交易
 //    Transaction transaction = Transaction.createFunctionCallTransaction(from, nonce, gasPrice, null,
 //        contractAddress, data);
-    // 计算gasLimit
+     // 计算gasLimit
 //    BigInteger gasLimit = getTxGasLimit(transaction).multiply(BigInteger.valueOf(1L));
-    BigInteger gasLimit = getGaslimit("transfer", from, contractAddress);
+    BigInteger gasLimit = getGaslimit("transfer", from, contractAddress).multiply(BigInteger.TWO);
 
     // 查询调用者余额，检测余额是否充足
     BigInteger balance = getBalance(from);
