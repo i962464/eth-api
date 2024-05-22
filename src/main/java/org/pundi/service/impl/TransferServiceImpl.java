@@ -178,6 +178,7 @@ public class TransferServiceImpl implements TransferService {
           }
         }
       }
+
       //保存记录
       if (CollectionUtils.isNotEmpty(etherScanVOS)) {
         etherScanRecordService.saveRecord(etherScanVOS);

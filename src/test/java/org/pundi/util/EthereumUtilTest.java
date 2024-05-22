@@ -76,9 +76,9 @@ class EthereumUtilTest {
   public void ethTransfer() throws IOException, ExecutionException, InterruptedException {
 
     String hash = EthereumUtil.ethTransfer(
-        "0xA964d0d6936580d7d2D797DE5a71c1429D848248",
-        "0xB25Fdff8D86C85eb5E9b455b71487CE76f086DfF", new BigInteger("20000000000000000"),
-        "xpub661MyMwAqRbcGs526wyeqiWQ4hCJCGZ52oAo1Uo47QXLkkATZXy2g1jApdfzRbyMTXVdsASP8nd4RBtAYCFCfxS28GD6DXSV6fPScHhfgdj");
+        "0x8cE4092e890c5E21d1596156EDc73Ab00242B20d",
+        "0xB25Fdff8D86C85eb5E9b455b71487CE76f086DfF", new BigInteger("1000000000000000"),
+        "11e807ffd2af91ad19a093c9613f116139848b6bf10f9fb8f2f0f138f7b44ec4");
     System.out.println(hash);
   }
 
@@ -87,7 +87,7 @@ class EthereumUtilTest {
 
     String hash = EthereumUtil.tokenTransfer(
         "0x8cE4092e890c5E21d1596156EDc73Ab00242B20d",
-        "0xcb9d23f81ced2c39832e5d0652cebf0695456ac7",
+        "0xf47c629fbe70498d221f2eed7c8aad67137c7189",
         "0xEDC0d17D2804D6937dd83b993C7A668059bBF78D",
         new BigInteger("1000000000000000000000"),
         "11e807ffd2af91ad19a093c9613f116139848b6bf10f9fb8f2f0f138f7b44ec4");
