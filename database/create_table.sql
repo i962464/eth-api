@@ -147,3 +147,81 @@ ALTER TABLE `deposit_tx_record`
         `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
+
+
+
+-- twitter 相关
+
+CREATE TABLE `user_auth_twitter_tmp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_twitter_id` varchar(100) NOT NULL COMMENT '用户的twitter id',
+  `name` varchar(100) NOT NULL COMMENT 'twitter用户名',
+  `avatar` varchar(300) NOT NULL COMMENT 'twitter头像',
+  `oauth_token` varchar(200) NOT NULL COMMENT '授权token',
+  `oauth_token_secret` varchar(200) NOT NULL COMMENT '授权token',
+  `access_token` varchar(200) DEFAULT '' COMMENT '用户token, 授权成功后回填',
+  `access_token_secret` varchar(200) DEFAULT '' COMMENT '用户token secret, 授权成功后回填',
+  `token` varchar(200) NOT NULL COMMENT '登陆token, 授权成功后生成',
+  `status` tinyint NOT NULL COMMENT '是否已关联用户 0:未关联用户; 1:已关联用户',
+  `dt` bigint NOT NULL COMMENT '创建时间',
+  `expiry_time` bigint NOT NULL COMMENT 'token过期时间',
+  `refresh_token` varchar(200) NOT NULL COMMENT '刷新token',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_oauth_token` (`oauth_token`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='twitter授权信息临时表';
+ALTER TABLE `user_auth_twitter_tmp`
+    ADD (
+        `version` INT UNSIGNED NULL DEFAULT 0 COMMENT '乐观锁预留',
+        `deleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除，冗余字段',
+        `deleted_at` DATETIME NULL,
+        `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+
+CREATE TABLE `user_auth_twitter` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL COMMENT '用户id',
+  `user_twitter_id` varchar(100) NOT NULL COMMENT '用户的twitter id',
+  `name` varchar(100) NOT NULL COMMENT 'twitter用户名',
+  `avatar` varchar(300) NOT NULL COMMENT 'twitter头像',
+  `access_token` varchar(200) NOT NULL COMMENT '用户token',
+  `access_token_secret` varchar(200) NOT NULL COMMENT '用户token secret',
+  `dt` bigint NOT NULL COMMENT '创建时间',
+  `update_dt` bigint NOT NULL COMMENT '更新时间',
+  `expiry_time` bigint NOT NULL COMMENT 'token过期时间',
+  `refresh_token` varchar(200) NOT NULL COMMENT '刷新token',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_user_id` (`user_id`),
+  UNIQUE KEY `uq_user_twitter_id` (`user_twitter_id`),
+  UNIQUE KEY `uq_access_token` (`access_token`),
+  KEY `idx_user_id_dt` (`user_id`,`dt`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户twitter授权信息';
+
+ALTER TABLE `user_auth_twitter`
+    ADD (
+        `version` INT UNSIGNED NULL DEFAULT 0 COMMENT '乐观锁预留',
+        `deleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除，冗余字段',
+        `deleted_at` DATETIME NULL,
+        `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+
+CREATE TABLE `user_login_token` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL COMMENT '用户id',
+  `token` varchar(200) NOT NULL COMMENT '登陆token',
+  `ip` varchar(30) NOT NULL COMMENT 'ip',
+  `dt` bigint NOT NULL COMMENT '创建时间',
+  `update_dt` bigint NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_user_id` (`user_id`),
+  UNIQUE KEY `uq_token` (`token`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户登陆token';
+ALTER TABLE `user_login_token`
+    ADD (
+        `version` INT UNSIGNED NULL DEFAULT 0 COMMENT '乐观锁预留',
+        `deleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除，冗余字段',
+        `deleted_at` DATETIME NULL,
+        `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );

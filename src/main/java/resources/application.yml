@@ -1,10 +1,13 @@
+server:
+  port: 16666
+
 spring:
   datasource:
     druid:
       url: jdbc:mysql://localhost:3306/pundi?useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&verifyServerCertificate=false&useSSL=false
       driver-class-name: com.mysql.jdbc.Driver
       username: root
-      password: 'root123456'
+      password: '123456'
       initial-size: 5
       max-active: 30
       min-idle: 5
@@ -48,3 +51,15 @@ pundi:
 api:
   infura:
     url: "https://sepolia.infura.io/v3/7cecab00c2b8496cbf7a51fcd05fb5ec"
+
+twitter:
+  conf:
+    consumer-key: "aCzHhsbhRJCGGIzg5A3rAT8oe"
+    consumer-secret: "cQv2MxR7rUWFDZr7JHRTLf1N30DBqZbBJnkOKlUcEy5aRVuGCw"
+    bearer-token: "AAAAAAAAAAAAAAAAAAAAAOIjuAEAAAAAjIR6gSS1IWaSol5qkWC3I3TeTzg%3DeCdsCM6bRiCksBtAfiPJKIdicQxujLES6NvJDvOBBLdtP7SnOv"
+    #和开发者门户中配置的回调地址一致,
+    callback-url: "http://8yhgek.natappfree.cc/oauth20/grant"
+    # 下面在升级2.0  必须要添加的配置
+    scope: "tweet.read users.read follows.read like.read offline.access"
+    client-id: "WGlLWkZPb2FVLU5KTjVZdHlUSzY6MTpjaQ"
+    client-secret: "F7KtpSR9s85bqQt_tZ78_I4vMPlo5p40Dwj7NkhPuKQDPQ2T-g"

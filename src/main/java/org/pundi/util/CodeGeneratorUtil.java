@@ -51,9 +51,9 @@ public class CodeGeneratorUtil {
     DataSourceConfig dsc = new DataSourceConfig();
     dsc.setDriverName("com.mysql.jdbc.Driver");
 
-    dsc.setUrl("jdbc:mysql://localhost:3306/pundi?useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&verifyServerCertificate=false&useSSL=false");
+    dsc.setUrl("jdbc:mysql://localhost:3306/xplugin?useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&verifyServerCertificate=false&useSSL=false");
     dsc.setUsername("root");
-    dsc.setPassword("root123456");
+    dsc.setPassword("123456");
 
 
     // 设置数据源
@@ -93,7 +93,7 @@ public class CodeGeneratorUtil {
     // 实体父类中的字段，多个用逗号分隔
     //strategy.setSuperEntityColumns("id")
     // 表名称
-    strategy.setInclude(("deposit_tx_record").split(","));
+    strategy.setInclude(("user_login_token").split(","));
     // 驼峰转连字符
     strategy.setControllerMappingHyphenStyle(true);
     // 表前缀

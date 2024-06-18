@@ -100,6 +100,17 @@ public class ResultCode implements Serializable {
    */
   public final static ResultCode ADDRESS_VALID_ERROR = dispose(ResultCodeEnum.ADDRESS_VALID_ERROR);
 
+
+  /**
+   * 推特相关
+   */
+  public final static ResultCode OAUTH_PREPARE_EXCEPTION = dispose(ResultCodeEnum.OAUTH_PREPARE_EXCEPTION);
+  public final static ResultCode OAUTH_GRANT_EXCEPTION = dispose(ResultCodeEnum.OAUTH_GRANT_EXCEPTION);
+  public final static ResultCode DATABASE_ERROR = dispose(ResultCodeEnum.DATABASE_ERROR);
+
+
+
+
   /**
    * 系统异常
    */
@@ -134,6 +145,11 @@ public class ResultCode implements Serializable {
     ADDRESS_NOT_EXIST(5002, "地址不存在"),
     ADDRESS_VALID_ERROR(5003, "地址格式错误"),
     USER_NOT_FOUND(5004, "用户不存在"),
+
+    //twitter 相关
+    OAUTH_PREPARE_EXCEPTION(60001, "Could not retrieve permission url"),
+    OAUTH_GRANT_EXCEPTION(60002, "Could not retrieve user access token"),
+    DATABASE_ERROR(60003, "Database exception"),
 
     SYS_ERROR(9999, "系统异常");
 

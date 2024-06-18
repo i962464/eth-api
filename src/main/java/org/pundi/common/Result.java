@@ -185,4 +185,7 @@ public class Result<T> implements Serializable {
     this.data = data;
   }
 
+  public boolean hasError() {
+    return this.code != ResultCode.SUCCESS.getCode();
+  }
 }

@@ -66,10 +66,12 @@ class EthereumUtilTest {
 
   @Test
   public void getBalanceByTokenTest() throws IOException, ExecutionException, InterruptedException {
-    EthereumUtil.setWeb3RpcEndpoint("https://sepolia.infura.io/v3/7cecab00c2b8496cbf7a51fcd05fb5ec");
-    BigInteger balance = EthereumUtil.getBalance("0xA964d0d6936580d7d2D797DE5a71c1429D848248", "");
-    BigDecimal divide = new BigDecimal(balance).divide(DECIMAL, 8, RoundingMode.DOWN);
-    System.out.println(divide);
+//    System.setProperty("http.proxyHost", "127.0.0.1");
+//    System.setProperty("http.proxyPort", "7890");
+    EthereumUtil.setWeb3RpcEndpoint("https://testnet-fx-json-web3.functionx.io:8545");
+    BigInteger balance = EthereumUtil.getBalance("0xB25Fdff8D86C85eb5E9b455b71487CE76f086DfF", "0xc8B4d3e67238e38B20d38908646fF6F4F48De5EC");
+//    BigDecimal divide = new BigDecimal(balance).divide(DECIMAL, 8, RoundingMode.DOWN);
+    System.out.println(balance);
   }
 
   @Test

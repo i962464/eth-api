@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pundi.mapper.UserLoginTokenMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.pundi.entity.UserLoginTokenEntity">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="token" property="token" />
+        <result column="ip" property="ip" />
+        <result column="dt" property="dt" />
+        <result column="update_dt" property="updateDt" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, token, ip, dt, update_dt
+    </sql>
+
+</mapper>
