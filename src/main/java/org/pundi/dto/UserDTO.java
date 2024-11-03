@@ -13,6 +13,8 @@ import lombok.Data;
 @Data
 public class UserDTO {
 
+  private Integer id;
+
   @NotBlank(message = "参数不能为空")
   private String name;
 }

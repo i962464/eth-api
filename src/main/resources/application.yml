@@ -63,3 +63,12 @@ twitter:
     scope: "tweet.read users.read follows.read like.read offline.access"
     client-id: "WGlLWkZPb2FVLU5KTjVZdHlUSzY6MTpjaQ"
     client-secret: "F7KtpSR9s85bqQt_tZ78_I4vMPlo5p40Dwj7NkhPuKQDPQ2T-g"
+
+
+aws:
+  s3Url: https://9302c2040014763012133198c2c42709.r2.cloudflarestorage.com
+  ak: af9c62a7f7258ad1baf08d357d490e99
+  sk: 6ac1651402a98dd4bcb586844ff19b7cee262168a8dcb061ba8d04bb3655d30b
+  bucketName: ai-label-dev
+  region: auto
+  annotationFolder: label-s3

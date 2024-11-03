@@ -57,5 +57,12 @@ public class UserController {
   }
 
 
+  @ApiOperation(value = "更新用户， 测试fo rupdate")
+  @PostMapping("/update")
+  Result<String> update(@RequestBody UserDTO dto){
+    userService.updateForUpdate(dto);
+    return Result.success("success");
+  }
+
 }
 

@@ -28,7 +28,7 @@ public class WalletJob {
   /**
    * 5 分钟一次网络交易扫描(解析ETH、ERC20 Token 交易)
    */
-  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
+//  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
   public void ethTxScan() throws IOException, ExecutionException, InterruptedException {
     log.info("ethTxScan start ...");
     transferService.scanUserTxs();
@@ -38,7 +38,7 @@ public class WalletJob {
   /**
    * 充值归集 https://sepolia.etherscan.io/address/0x8ce4092e890c5e21d1596156edc73ab00242b20d
    */
-  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
+//  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
   public void depositTxScan() throws IOException {
     log.info("depositCollection start ...");
 
@@ -50,7 +50,7 @@ public class WalletJob {
    * 批量转账
    * @throws IOException
    */
-  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
+//  @Scheduled(fixedRate = 1000 * 60 * 5, initialDelay = 1000 * 30)
   public void multipleTransfer() throws IOException, ExecutionException, InterruptedException {
 
     transferService.multipleTransfer();
